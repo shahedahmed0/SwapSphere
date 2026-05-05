@@ -4,7 +4,7 @@ import io from 'socket.io-client';
 import { API_BASE_URL, apiUrl } from '../config/api';
 import HobbyBadge from './HobbyBadge';
 
-const Header = ({ isAuthenticated, userProfile }) => {
+const Header = ({ isAuthenticated, userProfile, onLogout }) => {
   const navigate = useNavigate();
   const location = useLocation();
   const [notifications, setNotifications] = useState([]);
@@ -121,7 +121,9 @@ const Header = ({ isAuthenticated, userProfile }) => {
   }, []);
 
   const handleLogout = () => {
-    localStorage.removeItem('token');
+    if (onLogout) {
+      onLogout();
+    }
     navigate('/');
   };
 

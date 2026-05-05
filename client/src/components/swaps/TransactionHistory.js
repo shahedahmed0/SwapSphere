@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
 import ReviewForm from './ReviewForm';
 import { apiUrl } from '../../config/api';
@@ -9,22 +9,22 @@ const TransactionHistory = ({ userId, userProfile }) => {
   const [loading, setLoading] = useState(true);
   const [reportingId, setReportingId] = useState('');
 
-  useEffect(() => {
-    const fetchHistory = async () => {
-      try {
-        const res = await axios.get(apiUrl('/api/swaps/my-swaps'), {
-          headers: { 'x-auth-token': localStorage.getItem('token') || '' }
-        });
-        setHistory(res.data.history || []);
-      } catch (err) {
-        console.error('Failed to fetch transaction history', err);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchHistory();
+  const fetchHistory = useCallback(async () => {
+    try {
+      const res = await axios.get(apiUrl('/api/swaps/my-swaps'), {
+        headers: { 'x-auth-token': localStorage.getItem('token') || '' }
+      });
+      setHistory(res.data.history || []);
+    } catch (err) {
+      console.error('Failed to fetch transaction history', err);
+    } finally {
+      setLoading(false);
+    }
   }, []);
+
+  useEffect(() => {
+    fetchHistory();
+  }, [fetchHistory]);
 
   const reportSwap = async (swapId) => {
     const reason = window.prompt('Report reason (e.g., "Used item labeled Mint")');
@@ -158,7 +158,7 @@ const TransactionHistory = ({ userId, userProfile }) => {
                       <ReviewForm
                       swapId={swap._id}
                       revieweeId={tradePartner?._id}
-                      onReviewSubmitted={() => window.location.reload()} />
+                      onReviewSubmitted={fetchHistory} />
                     
                     </div>
                   </div>

@@ -71,6 +71,14 @@ function App() {
     }
   }, []);
 
+  const handleLogout = useCallback(() => {
+    localStorage.removeItem('token');
+    localStorage.removeItem('userId');
+    setDbUserId(null);
+    setUserProfile(null);
+    setIsAuthenticated(false);
+  }, []);
+
   useEffect(() => {
     AOS.init({ duration: 1000, easing: 'ease-in-out', once: true });
     loadUser();
@@ -81,7 +89,11 @@ function App() {
   return (
     <Router>
       <div className="App">
-        <Header isAuthenticated={isAuthenticated} userProfile={userProfile} />
+        <Header
+          isAuthenticated={isAuthenticated}
+          userProfile={userProfile}
+          onLogout={handleLogout}
+        />
         <LayoutWrapper>
           <Routes>
             <Route path="/" element={
