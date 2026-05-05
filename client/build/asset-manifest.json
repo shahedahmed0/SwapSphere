@@ -1,16 +1,16 @@
 {
   "files": {
     "main.css": "/static/css/main.31de6b10.css",
-    "main.js": "/static/js/main.e52d5e7e.js",
+    "main.js": "/static/js/main.114b1a5a.js",
     "static/media/barter-exchange-book-cd-10801649.jpg": "/static/media/barter-exchange-book-cd-10801649.c2ae257d5c447f3d0430.jpg",
     "static/media/360_F_291038780_pUTV5LU9SHrDNR4ddg5GsqNkgRJzOLh4.jpg": "/static/media/360_F_291038780_pUTV5LU9SHrDNR4ddg5GsqNkgRJzOLh4.a8ad5389b6bcaeddf59b.jpg",
     "static/media/uno-uno-reverse-card.gif": "/static/media/uno-uno-reverse-card.04f61ce8324c0188c7e1.gif",
     "index.html": "/index.html",
     "main.31de6b10.css.map": "/static/css/main.31de6b10.css.map",
-    "main.e52d5e7e.js.map": "/static/js/main.e52d5e7e.js.map"
+    "main.114b1a5a.js.map": "/static/js/main.114b1a5a.js.map"
   },
   "entrypoints": [
     "static/css/main.31de6b10.css",
-    "static/js/main.e52d5e7e.js"
+    "static/js/main.114b1a5a.js"
   ]
 }

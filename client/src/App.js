@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, useLocation, useParams, Navigate, Link } from 'react-router-dom';
 import axios from 'axios';
 import AOS from 'aos';
@@ -42,30 +42,39 @@ function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [loading, setLoading] = useState(true);
 
+  const loadUser = useCallback(async (tokenOverride = null) => {
+    const token = tokenOverride || localStorage.getItem('token');
+    if (!token) {
+      setDbUserId(null);
+      setUserProfile(null);
+      setIsAuthenticated(false);
+      setLoading(false);
+      return;
+    }
+
+    try {
+      const res = await axios.get(apiUrl('/api/auth/me'), {
+        headers: { 'x-auth-token': token }
+      });
+      setDbUserId(res.data._id);
+      setUserProfile(res.data);
+      localStorage.setItem('userId', res.data._id);
+      setIsAuthenticated(true);
+    } catch (err) {
+      localStorage.removeItem('token');
+      localStorage.removeItem('userId');
+      setDbUserId(null);
+      setUserProfile(null);
+      setIsAuthenticated(false);
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
   useEffect(() => {
     AOS.init({ duration: 1000, easing: 'ease-in-out', once: true });
-
-    const loadUser = async () => {
-      const token = localStorage.getItem('token');
-      if (token) {
-        try {
-          const res = await axios.get(apiUrl('/api/auth/me'), {
-            headers: { 'x-auth-token': token }
-          });
-          setDbUserId(res.data._id);
-          setUserProfile(res.data);
-          localStorage.setItem('userId', res.data._id);
-          setIsAuthenticated(true);
-        } catch (err) {
-          localStorage.removeItem('token');
-          localStorage.removeItem('userId');
-          setIsAuthenticated(false);
-        }
-      }
-      setLoading(false);
-    };
     loadUser();
-  }, []);
+  }, [loadUser]);
 
   if (loading) return <div className="p-5 text-center">Verifying SwapSphere Session...</div>;
 
@@ -103,7 +112,7 @@ function App() {
             />
             <Route path="/how-it-works" element={<HowItWorks />} />
             <Route path="/safety" element={<Safety />} />
-            <Route path="/login" element={<Login />} />
+            <Route path="/login" element={<Login onLoginSuccess={loadUser} />} />
             <Route path="/register" element={<Register />} />
 
             <Route
