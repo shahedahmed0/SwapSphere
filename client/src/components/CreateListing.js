@@ -26,6 +26,11 @@ const CreateListing = ({ userId }) => {
       return;
     }
 
+    if (conditionChecklist.length === 0) {
+      alert(`Please complete the ${formData.category} condition checklist before publishing. Flaws must be called out honestly.`);
+      return;
+    }
+
     try {
       const data = new FormData();
       data.append('title', formData.title);
@@ -213,7 +218,7 @@ const CreateListing = ({ userId }) => {
                   )}
                 </div>
 
-                <button type="submit" className="btn btn-success btn-lg w-100 rounded-pill fw-semibold py-3">
+                <button type="submit" className="btn btn-success btn-lg w-100 rounded-pill fw-semibold py-3" disabled={conditionChecklist.length === 0}>
                   Publish listing
                 </button>
               </div>
